@@ -20,11 +20,14 @@ enum custom_keycodes {
 
 const uint16_t KC_EMOJI = LGUI(LCTL(KC_SPACE));
 const uint16_t KC_AG = OSM(MOD_LALT|MOD_LGUI);
-const uint16_t KC_SG3 = LSG(KC_3);
-const uint16_t KC_SGC3 = LSG(LCTL(KC_3));
-const uint16_t KC_SG4 = LSG(KC_4);
-const uint16_t KC_SGC4 = LSG(LCTL(KC_4));
+const uint16_t KC_SG3 = LSG(KC_3); // SHIFT + GLOBAL, MacOS Capture Shortcut 
+const uint16_t KC_SGC3 = LSG(LCTL(KC_3)); // SHIFT + CTRL + GLOBAL, MacOS Capture Shortcut
+const uint16_t KC_SG4 = LSG(KC_4); // SHIFT + GLOBAL, MacOS Capture Shortcut(Select Area)
+const uint16_t KC_SGC4 = LSG(LCTL(KC_4)); // SHIFT + CTRL + GLOBAL, MacOS Capture Shortcut(Select Area)
 const uint16_t KC_SG5 = LSG(KC_5);
+
+const uint16_t GO_BACK = LGUI(KC_LBRC); // Go Backward on MacOS Browser
+const uint16_t GO_FORWARD = LGUI(KC_RBRC); // Go Forward on MacOS Browser
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -88,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      RGB_M_P, _______, _______, _______, _______, RGB_MOD,                            KC_SG4,  KC_SGC4, KC_SG3,  KC_SGC3, KC_SG5, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     RGB_M_B, _______, _______, _______, _______, BL_STEP,                            KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, _______, _______,
+     RGB_M_B, _______, _______, _______, _______, BL_STEP,                            KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, GO_BACK, GO_FORWARD,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      RGB_M_R, _______, _______, _______, _______, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
