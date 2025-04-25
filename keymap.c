@@ -28,6 +28,8 @@ const uint16_t KC_SG5 = LSG(KC_5);
 
 const uint16_t GO_BACK = LGUI(KC_LBRC); // Go Backward on MacOS Browser
 const uint16_t GO_FORWARD = LGUI(KC_RBRC); // Go Forward on MacOS Browser
+const uint16_t GO_UPPER = LGUI(KC_UP); // Go Upper on MacOS Finder
+const uint16_t GO_LOWER = LGUI(KC_DOWN); // Go Lower on MacOS Finder
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -93,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      RGB_M_B, _______, _______, _______, _______, BL_STEP,                            KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, GO_BACK, GO_FORWARD,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     RGB_M_R, _______, _______, _______, _______, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
+     RGB_M_R, _______, _______, _______, _______, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, GO_UPPER, GO_LOWER,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
     RGB_M_SW, _______, _______, _______, _______, _______, _______,          _______, KC_WH_R, KC_WH_U, KC_WH_D, KC_WH_L, _______, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
