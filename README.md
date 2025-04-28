@@ -1,5 +1,5 @@
-# IRIS 키보드 zerodice0 키맵 세팅
-기본 키맵을 기반으로 추가적인 키를 할당해놓은 펌웨어 레포지터리입니다.
+# IRIS 키보드 키맵 세팅
+기본 키맵을 기반으로 macOS에서 사용하기 편하도록 추가적인 키를 할당해놓은 펌웨어 레포지터리입니다.
 
 ## IRIS 키보드 소개
 ![IRIS 키보드](https://keeb.io/cdn/shop/files/keyset-iris_1100x_8dba1734-1572-455b-aab2-1380992644e1.png?height=714&v=1707776710&width=952)
