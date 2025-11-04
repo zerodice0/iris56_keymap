@@ -13,5 +13,6 @@ AUDIO_ENABLE = no           # Audio output
 SPLIT_KEYBOARD = yes
 ENCODER_ENABLE = no
 RGB_MATRIX_ENABLE = yes
+OS_DETECTION_ENABLE = yes
 
 LTO_ENABLE = yes

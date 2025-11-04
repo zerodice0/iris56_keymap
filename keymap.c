@@ -41,6 +41,10 @@ const uint16_t TAP_P = LGUI(KC_GRV);
 #define KC_MCTL LGUI(KC_UP)   // Mission Control (Cmd+Up)
 #define KC_LPAD LGUI(KC_SPC)  // Launchpad (Cmd+Space)
 
+// OS detection variables for automatic mouse wheel direction adjustment
+static os_variant_t current_os = OS_UNSURE;
+static bool os_detected = false;
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_BASIC] = LAYOUT(
@@ -153,4 +157,54 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   return true;
+}
+
+// OS detection callback - automatically invoked when OS is detected
+bool process_detected_host_os_user(os_variant_t detected_os) {
+    current_os = detected_os;
+    os_detected = true;
+
+    // Optional: Visual feedback via RGB Matrix
+    #ifdef RGB_MATRIX_ENABLE
+    switch (detected_os) {
+        case OS_MACOS:
+        case OS_IOS:
+            // White color for macOS/iOS
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(0, 0, 255);
+            break;
+        case OS_WINDOWS:
+            // Blue color for Windows
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(170, 255, 255);
+            break;
+        case OS_LINUX:
+            // Green color for Linux
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(85, 255, 255);
+            break;
+        default:
+            // Yellow for unsure/unknown
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(43, 255, 255);
+            break;
+    }
+    #endif
+
+    return true;
+}
+
+// Automatic mouse wheel direction adjustment based on detected OS
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (os_detected) {
+        // macOS/iOS use "natural scrolling" by default (opposite direction)
+        // Invert wheel direction to match the OS's natural scrolling behavior
+        if (current_os == OS_MACOS || current_os == OS_IOS) {
+            mouse_report.v = -mouse_report.v;  // Invert vertical scroll
+            mouse_report.h = -mouse_report.h;  // Invert horizontal scroll
+        }
+        // Windows/Linux keep default direction (no inversion needed)
+    }
+
+    return mouse_report;
 }
