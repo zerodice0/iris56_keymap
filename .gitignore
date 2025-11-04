@@ -1,0 +1,5 @@
+# Release notes (private documentation)
+release_notes/
+
+# Claude Code configuration (local settings)
+.claude/

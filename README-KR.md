@@ -30,7 +30,7 @@ PCB 보드에 기본적으로 설치되어있는 rules.mk에는 `VIA_ENABLE` 옵
 [QMK Firmware](https://github.com/qmk/qmk_firmware) 레포지터리에서 키맵 설정 및 QMK Firmware 빌드 방법을 설명합니다. `keymap.c` 파일을 수정하여 키 할당을 변경하고, `rule.mk` 파일을 수정해서 설정을 변경합니다. PCB 보드에 기본적으로 설치되어있는 펌웨어에는 마우스 키를 사용하기 위한 `MOUSEKEY_ENABLE` 옵션이나 VIA를 사용하기 위한 `VIA_ENABLE` 옵션이 설정되어있지 않습니다. 따라서 보다 자신에게 맞는 사용방법을 익히기 위해서는 QMK Firmware를 사용해서 펌웨어 빌드 방법을 익히는 것이 좋습니다.
 
 ## 이 레포지터리를 통해 배포되는 펌웨어는?
-저는 주로 MacOS 환경에서 키보드 펌웨어를 빌드하고 사용합니다. 따라서 Windows/Linux 환경에서 키보드를 사용하는 경우에는 마우스 휠 스크롤이 반대라던지, 일부 단축키가 다른 문제가 발생할 소지가 있습니다. 이 점을 참고해주세요.
+이 펌웨어는 **macOS, Windows, Linux, iOS**를 지원하며 키보드 단축키가 자동으로 적응합니다. 펌웨어가 자동으로 운영체제를 감지하여 스크린샷 캡처, 언어 전환, 마우스 휠 방향에 적절한 단축키를 적용합니다.
 
 기본적으로는 PCB 보드에 설치되어있는 기본 키맵을 따르며, 추가적으로 단축키를 할당했습니다.
 1. HOME 대신 FN3 할당
@@ -42,7 +42,68 @@ PCB 보드에 기본적으로 설치되어있는 rules.mk에는 `VIA_ENABLE` 옵
 7. FN3 + Y,U,I,O 로 마우스 버튼 클릭
 8. FN3 + P, DEL 로 CHROME 이전 페이지/다음 페이지로 이동
 9. FN3 + ;, '로 FINDER 상위 폴더/하위 폴더로 이동
-10. FN3 + 6 으로 일부 영역 스크린 캡쳐
-11. FN3 + 7 으로 일부 영역 스크린 캡쳐 후 복사
-12. FN3 + 8 으로 전체 화면 스크린 캡쳐
-13. FN3 + 9 으로 전체 화면 스크린 캡쳐 후 복사 
+10. OS에 독립적인 스크린샷 단축키 (OS에 자동 적응):
+    - **SC_FULL** (FN3+8): 전체 화면 캡쳐
+    - **SC_AREA** (FN3+6): 영역 선택 캡쳐
+    - **SC_MENU** (FN3+9): 스크린샷 메뉴/옵션
+    - **SC_CLIP_FULL** (FN3+Shift+8): 클립보드로 전체 화면 캡쳐
+    - **SC_CLIP_AREA** (FN3+7): 클립보드로 영역 선택 캡쳐
+11. **LANG_SW** (FN1 + 오른쪽 하단)로 언어 전환: OS 입력 방식에 자동 적응
+12. 마우스 휠 방향 (**MW_RIGHT/UP/DOWN/LEFT**) OS별 자동 조정
+
+## 멀티 OS 호환성
+
+이 펌웨어는 운영체제(macOS, Windows, Linux, iOS)를 자동으로 감지하여 키보드 단축키를 적용하는 OS 인식 기능을 구현했습니다.
+
+### OS별 지원 기능
+
+| 기능 | macOS/iOS | Windows | Linux |
+|------|-----------|---------|-------|
+| 스크린샷 단축키 | ✅ 완전 지원 (Cmd+Shift+3/4/5) | ✅ 캡처 도구 (Win+Shift+S) | ✅ PrtScn 변형 |
+| 언어 전환 | ✅ Ctrl+Space / Caps Lock | ✅ Right Alt | ✅ Shift+Space |
+| 마우스 휠 방향 | ✅ 자연스러운 스크롤 | ✅ 역방향 스크롤 | ✅ 역방향 스크롤 |
+| 마우스 제어 | ✅ 완전 지원 | ✅ 완전 지원 | ✅ 완전 지원 |
+
+### OS별 단축키 상세
+
+#### 스크린샷 키코드
+- **SC_FULL**: 전체 화면 캡쳐
+  - macOS: Cmd+Shift+3
+  - Windows: Win+Shift+S (캡처 도구)
+  - Linux: PrtScn
+
+- **SC_AREA**: 영역 선택
+  - macOS: Cmd+Shift+4
+  - Windows: Win+Shift+S
+  - Linux: Shift+PrtScn
+
+- **SC_MENU**: 스크린샷 메뉴/옵션
+  - macOS: Cmd+Shift+5 (스크린샷 메뉴)
+  - Windows: Win+Shift+S
+  - Linux: PrtScn
+
+- **SC_CLIP_FULL**: 클립보드로 전체 화면 캡쳐
+  - macOS: Cmd+Ctrl+Shift+3
+  - Windows: Win+Shift+S (클립보드에 저장)
+  - Linux: Ctrl+PrtScn
+
+- **SC_CLIP_AREA**: 클립보드로 영역 선택 캡쳐
+  - macOS: Cmd+Ctrl+Shift+4
+  - Windows: Win+Shift+S
+  - Linux: Ctrl+Shift+PrtScn
+
+#### 언어 전환
+- **LANG_SW**: OS 인식 언어/입력 소스 전환
+  - macOS: Ctrl+Space
+  - iOS: Caps Lock
+  - Windows: Right Alt (언어 표시줄)
+  - Linux: Shift+Space (IBus/Fcitx)
+
+#### 마우스 휠 방향
+- **MW_RIGHT/UP/DOWN/LEFT**: OS 스크롤 규칙에 자동 적응
+  - macOS/iOS: 자연스러운 스크롤 (휠 오른쪽 = 스크롤 오른쪽)
+  - Windows/Linux: 역방향 스크롤 (휠 오른쪽 = 스크롤 왼쪽)
+
+### 동작 원리
+
+펌웨어가 키보드를 연결할 때 자동으로 OS를 감지하여 올바른 단축키를 적용합니다. OS 감지를 사용할 수 없는 경우 펌웨어는 기본적으로 macOS 단축키를 사용합니다. 모든 단축키는 연속 키 입력을 지원합니다 - 키를 꾹 누르면 동작이 반복됩니다 (마우스 휠 스크롤의 가속도 지원에 유용).

@@ -4,7 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a custom QMK firmware keymap for the **Keebio Iris Rev7** split keyboard, optimized for macOS. The keymap implements a 5-layer system with layer switching via thumb keys (LEFT_UNDER/RIGHT_UNDER), tri-layer activation, and macOS-specific shortcuts.
+**IMPORTANT - Repository Structure:**
+- This directory (`keyboards/keebio/iris/keymaps/zerodice0`) is managed as a **separate Git repository**
+- Repository URL: https://github.com/zerodice0/iris56_keymap
+- Parent QMK firmware repository: `/Users/zerodice0/qmk_firmware` (or `/Users/zerodice0/workspace/qmk_firmware`)
+- The parent QMK repository has this directory excluded in its `.gitignore`
+- **All Git operations should target THIS repository (iris56_keymap), not the parent QMK repository**
+
+This is a custom QMK firmware keymap for the **Keebio Iris Rev7** split keyboard, supporting **macOS, Windows, Linux, and iOS** with automatic OS detection and adaptation. The keymap implements a 5-layer system with layer switching via thumb keys (LEFT_UNDER/RIGHT_UNDER), tri-layer activation, and OS-agnostic shortcuts.
 
 ## Architecture & Design
 
@@ -21,15 +28,28 @@ The firmware uses **5 keyboard layers** controlled through custom keycodes and t
 
 **Key Design Pattern**: Layers 1 & 2 activate independently via the thumb keys. When BOTH are held simultaneously, layer 3 automatically activates via `update_tri_layer()` logic in the `process_record_user()` function (keymap.c:119, 129).
 
-### macOS-Specific Features
+### OS-Agnostic Features
 
-Custom key constants provide common macOS shortcuts (defined at top of keymap.c):
+**Multi-OS Support with Automatic Detection:**
+- Firmware detects OS on connection (macOS, Windows, Linux, iOS)
+- Keyboard shortcuts automatically adapt to the detected OS
+- All custom keycodes work consistently across operating systems
 
-- **Screen capture shortcuts**: `KC_SG3/4/5`, `KC_SGC3/4` (Shift+Cmd+3/4/5 variants)
+**OS-Agnostic Custom Keycodes** (defined at top of keymap.c):
+
+- **Screenshot shortcuts**: `SC_FULL`, `SC_AREA`, `SC_MENU`, `SC_CLIP_FULL`, `SC_CLIP_AREA`
+  - Automatically use Cmd+Shift (macOS), Win+Shift+S (Windows), or PrtScn variants (Linux)
+- **Language switching**: `LANG_SW`
+  - macOS: Ctrl+Space | iOS: Caps Lock | Windows: Right Alt | Linux: Shift+Space
+- **Mouse wheel direction**: `MW_RIGHT`, `MW_UP`, `MW_DOWN`, `MW_LEFT`
+  - Automatically adapts to OS scrolling conventions (natural vs reversed)
 - **Browser navigation**: `GO_BACK` (Cmd+[), `GO_FORWARD` (Cmd+])
 - **Finder navigation**: `GO_UPPER` (Cmd+↑), `GO_LOWER` (Cmd+↓)
 - **Emoji picker**: `KC_EMOJI` (Cmd+Ctrl+Space)
 - **Alt+Cmd combo**: `KC_AG` (one-shot modifier)
+
+**Backward Compatibility:**
+- Legacy keycodes (`KC_SG3`, `KC_SG4`, etc.) still supported via `#define` aliases
 
 ### Key Implementation Details
 
@@ -84,16 +104,29 @@ qmk flash -kb keebio/iris/rev7 -km zerodice0
 
 Edit the corresponding `[_LAYER_NAME] = LAYOUT(...)` block. Maintain visual alignment using comments for row separators. Reference QMK keycode documentation for available keys.
 
-### Testing macOS Compatibility
+### Testing Multi-OS Compatibility
 
-Firmware is macOS-optimized. Test on Windows/Linux may show:
-- Reversed mouse wheel scrolling
-- Different behavior for Cmd/Ctrl/Alt key combinations
-- Incompatible keycodes (e.g., mission control, launchpad)
+Firmware automatically adapts to detected OS (macOS, Windows, Linux, iOS):
+
+**What to Test:**
+- **OS Detection**: Verify RGB lighting shows correct color on connection (see `os_detection_task()` in keymap.c)
+- **Screenshot shortcuts**: Test SC_* keycodes produce correct OS-specific behavior
+- **Language switching**: Verify LANG_SW uses appropriate shortcut for each OS
+- **Mouse wheel**: Check MW_* directions match OS scrolling conventions (natural on macOS/iOS, reversed on Windows/Linux)
+- **Continuous key press**: Hold down custom keycodes to verify repeated events (screenshot, mouse wheel, etc.)
+
+**OS-Specific Behavior:**
+- macOS: Cmd-based shortcuts, natural scrolling, Ctrl+Space language switch
+- iOS: Same as macOS except Caps Lock for language switching
+- Windows: Win-based shortcuts, reversed scrolling, Right Alt language switch
+- Linux: PrtScn-based screenshots, reversed scrolling, Shift+Space language switch
 
 ## Important Notes
 
-- **Repository Context**: This is a custom keymap within the larger QMK firmware repository. Full QMK documentation is at https://docs.qmk.fm/
-- **macOS Focus**: Primary development and testing is on macOS. Windows/Linux usage may require keycode adjustments
+- **Repository Management**: This is a **separate Git repository** (iris56_keymap), not part of the QMK firmware repository
+- **Multi-OS Support**: Firmware supports macOS, Windows, Linux, and iOS with automatic OS detection and shortcut adaptation
+- **QMK Framework**: Full QMK documentation is at https://docs.qmk.fm/
 - **No External Dependencies**: Pure C code with QMK framework only; no special build tools needed beyond `qmk cli`
-- **Persistent Configuration**: Use rules.mk and config.h files (if present in this directory) to enable features like MOUSEKEY_ENABLE or VIA_ENABLE
+- **Persistent Configuration**: Use rules.mk and config.h files to enable features like MOUSEKEY_ENABLE, RGB_MATRIX_ENABLE, or OS_DETECTION_ENABLE
+- **Firmware Size**: Current build uses 28,228/28,672 bytes (98.45%, 444 bytes free) - monitor size when adding features
+- **Private Documentation**: `release_notes/` and `.claude/` directories are excluded from version control (see .gitignore)
