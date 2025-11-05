@@ -267,7 +267,7 @@ uint16_t get_screenshot_clip_area(void) {
  */
 uint16_t get_language_switch(void) {
     if (!os_detected) {
-        return LGUI(KC_SPC);  // Default to macOS
+        return LCTL(KC_SPC);  // Default to macOS
     }
 
     switch (current_os) {
